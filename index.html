@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kana-Flow 情境日語學習網</title>
+    <style>
+        :root {
+            --primary-color: #4a7c59;
+            --accent-color: #f4a261;
+            --bg-color: #f7f9f6;
+            --card-bg: #ffffff;
+            --text-color: #2b2d42;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        header h1 { margin: 0 0 10px 0; font-size: 2.2rem; }
+        header p { margin: 0; opacity: 0.9; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background-color: #e2ece9;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: none;
+        }
+        .card.active { display: block; }
+        
+        h2 { color: var(--primary-color); border-bottom: 2px solid var(--bg-color); padding-bottom: 8px; margin-top: 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f1f5f2; color: var(--primary-color); }
+        
+        .mnemonic {
+            background-color: #fff8f0;
+            padding: 6px 10px;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .quiz-box {
+            background-color: #f1f5f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 12px;
+            margin-right: 10px;
+        }
+        .btn:hover { opacity: 0.9; }
+        .feedback { margin-top: 12px; font-weight: bold; }
+        .tip-box {
+            background-color: #e8f4ea;
+            border-left: 4px solid #2d6a4f;
+            padding: 10px;
+            margin-top: 12px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+        
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .score-board {
+            font-weight: bold;
+            color: #d90429;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🌸 Kana-Flow 情境日語學習網</h1>
+        <p>先扎實學習各場景 20+ 核心句型，再前往無限測驗挑戰自我！</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('ch1', event)">第1章：五十音與片假名</button>
+        <button class="tab-btn" onclick="switchTab('ch2', event)">第2章：學校用語(20則)</button>
+        <button class="tab-btn" onclick="switchTab('ch3', event)">第3章：機場用語(20則)</button>
+        <button class="tab-btn" onclick="switchTab('ch4', event)">第4章：買東西用語(20則)</button>
+        <button class="tab-btn" onclick="switchTab('ch5', event)">第5章：日常閒聊(20則)</button>
+        <button class="tab-btn" onclick="switchTab('quiz-section', event)">🎯 ♾️ 無限隨堂測驗專區</button>
+    </div>
+
+    <!-- 第一章教材 -->
+    <div id="ch1" class="card active">
+        <h2>📖 第1章：完整五十音與趣味片假名學習區</h2>
+        <p>請先在此區學習完整的清音五十音與片假名對照，搭配趣味聯想輕鬆記憶：</p>
+        <table>
+            <thead><tr><th>行別</th><th>平假名</th><th>片假名</th><th>羅馬拼音</th><th>趣味聯想記憶法</th></tr></thead>
+            <tbody>
+                <tr><td><strong>A 行</strong></td><td>あ / い / う / え / お</td><td><strong>ア / イ / ウ / エ / オ</strong></td><td>a, i, u, e, o</td><td><div class="mnemonic">ア(阿媽側臉), イ(椅子), ウ(屋簷), エ(工字), オ(哦!手勢)</div></td></tr>
+                <tr><td><strong>KA 行</strong></td><td>か / き / く / け / こ</td><td><strong>カ / キ / ク / ケ / コ</strong></td><td>ka, ki, ku, ke, ko</td><td><div class="mnemonic">カ(台語咖), キ(打鑰匙), ク(久), ケ(竹), コ(口框)</div></td></tr>
+                <tr><td><strong>SA 行</strong></td><td>さ / し / す / せ / そ</td><td><strong>サ / シ / ス / セ / ソ</strong></td><td>sa, shi, su, se, so</td><td><div class="mnemonic">サ(雨傘), シ(三根毛), ス(溜滑梯), セ(世界), ソ(倒V)</div></td></tr>
+                <tr><td><strong>TA 行</strong></td><td>た / ち / つ / て / と</td><td><strong>タ / チ / ツ / テ / ト</strong></td><td>ta, chi, tsu, te, to</td><td><div class="mnemonic">タ(夕陽), チ(千), ツ(刺身), テ(鐵釘), ト(鳥居)</div></td></tr>
+                <tr><td><strong>NA 行</strong></td><td>な / に / ぬ / ね / の</td><td><strong>ナ / ニ / ヌ / ネ / ノ</strong></td><td>na, ni, nu, ne, no</td><td><div class="mnemonic">ナ(十字), ニ(二), ヌ(奴隸), ネ(禮物), ノ(之)</div></td></tr>
+                <tr><td><strong>HA 行</strong></td><td>は / ひ / ふ / へ / ほ</td><td><strong>ハ / ヒ / フ / ヘ / ホ</strong></td><td>ha, hi, fu, he, ho</td><td><div class="mnemonic">ハ(八), ヒ(匕首), フ(不), ヘ(山峰), ホ(木)</div></td></tr>
+                <tr><td><strong>MA 行</strong></td><td>ま / み / む / め / も</td><td><strong>マ / ミ / ム / メ / モ</strong></td><td>ma, mi, mu, me, mo</td><td><div class="mnemonic">マ(馬), ミ(三), ム(厶), メ(女), モ(毛)</div></td></tr>
+                <tr><td><strong>YA 行</strong></td><td>や / ゆ / よ</td><td><strong>ヤ / ユ / ヨ</strong></td><td>ya, yu, yo</td><td><div class="mnemonic">ヤ(牙), ユ(由), ヨ(彐)</div></td></tr>
+                <tr><td><strong>RA 行</strong></td><td>ら / り / る / れ / ろ</td><td><strong>ラ / リ / ル / レ / ロ</strong></td><td>ra, ri, ru, re, ro</td><td><div class="mnemonic">ラ(拉), リ(利), ル(流), レ(呆), ロ(口)</div></td></tr>
+                <tr><td><strong>WA 行</strong></td><td>わ / を / ん</td><td><strong>ワ / ヲ / ン</strong></td><td>wa, o, n</td><td><div class="mnemonic">ワ(哇), ヲ(哦), ン(n)</div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 第二章教材：學校用語 20則 -->
+    <div id="ch2" class="card">
+        <h2>🏫 第2章：學校校園生活情境用語 (學習區 - 20則)</h2>
+        <p>請先瀏覽以下 20 個校園常用日語，熟悉後再前往測驗區挑戰：</p>
+        <table>
+            <thead><tr><th>編號</th><th>日文 / 漢字</th><th>羅馬拼音</th><th>中文意思</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>先生 (せんせい)</td><td>sensei</td><td>老師 / 教授</td></tr>
+                <tr><td>2</td><td>友達 (ともだち)</td><td>tomodachi</td><td>朋友</td></tr>
+                <tr><td>3</td><td>教科書 (きょうかしょ)</td><td>kyōkasho</td><td>課本</td></tr>
+                <tr><td>4</td><td>ノート</td><td>nōto</td><td>筆記本</td></tr>
+                <tr><td>5</td><td>宿題 (しゅくだい)</td><td>shukudai</td><td>作業 / 功課</td></tr>
+                <tr><td>6</td><td>試験 (しけん)</td><td>shiken</td><td>考試</td></tr>
+                <tr><td>7</td><td>教室 (きょうしつ)</td><td>kyōshitsu</td><td>教室</td></tr>
+                <tr><td>8</td><td>黒板 (こくばん)</td><td>kokuban</td><td>黑板</td></tr>
+                <tr><td>9</td><td>わかりました</td><td>wakarimashita</td><td>我明白了 / 知道了</td></tr>
+                <tr><td>10</td><td>質問があります</td><td>shitsumon ga arimasu</td><td>我有問題</td></tr>
+                <tr><td>11</td><td>お願いします</td><td>onegaishimasu</td><td>拜託了 / 請多指教</td></tr>
+                <tr><td>12</td><td>遅刻します</td><td>chikoku shimasu</td><td>我要遲到了</td></tr>
+                <tr><td>13</td><td>ペンを貸してください</td><td>pen o kashite kudasai</td><td>請借我筆</td></tr>
+                <tr><td>14</td><td>もう一度お願いします</td><td>mō ichido onegaishimasu</td><td>請再一次</td></tr>
+                <tr><td>15</td><td>休み時間</td><td>yasumi jikan</td><td>下課時間 / 休息時間</td></tr>
+                <tr><td>16</td><td>時間割 (じかんわり)</td><td>jikanwari</td><td>課表</td></tr>
+                <tr><td>17</td><td>鉛筆 (えんぴつ)</td><td>enpitsu</td><td>鉛筆</td></tr>
+                <tr><td>18</td><td>消しゴム</td><td>keshigomu</td><td>橡皮擦</td></tr>
+                <tr><td>19</td><td>図書館 (としょかん)</td><td>toshokan</td><td>圖書館</td></tr>
+                <tr><td>20</td><td>卒業 (そつぎょう)</td><td>sotsugyō</td><td>畢業</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 第三章教材：機場用語 20則 -->
+    <div id="ch3" class="card">
+        <h2>✈️ 第3章：機場通關與搭機情境用語 (學習區 - 20則)</h2>
+        <p>出國旅遊必備的 20 個機場與搭機核心單字：</p>
+        <table>
+            <thead><tr><th>編號</th><th>日文 / 漢字</th><th>羅馬拼音</th><th>中文意思</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>パスポート</td><td>pasupōto</td><td>護照</td></tr>
+                <tr><td>2</td><td>搭乗口 (とうじょうぐち)</td><td>tōjōguchi</td><td>登機門</td></tr>
+                <tr><td>3</td><td>免税店 (ぜんぜいてん)</td><td>menzeiten</td><td>免稅店</td></tr>
+                <tr><td>4</td><td>手荷物受取所</td><td>tenimotsu uketorisho</td><td>行李提領處</td></tr>
+                <tr><td>5</td><td>飛行機 (ひこうき)</td><td>hikōki</td><td>飛機</td></tr>
+                <tr><td>6</td><td>チケット</td><td>chiketto</td><td>機票 / 車票</td></tr>
+                <tr><td>7</td><td>座席 (ざせき)</td><td>zaseki</td><td>座位</td></tr>
+                <tr><td>8</td><td>窓側 (まどがわ)</td><td>madogawa</td><td>靠窗座位</td></tr>
+                <tr><td>9</td><td>通路側 (つうろがわ)</td><td>tsūrogawa</td><td>靠走道座位</td></tr>
+                <tr><td>10</td><td>出口 (でぐち)</td><td>deguchi</td><td>出口</td></tr>
+                <tr><td>11</td><td>入国審査</td><td>nyūkoku shinsa</td><td>入境審查 / 海關</td></tr>
+                <tr><td>12</td><td>荷物を預けます</td><td>nimotsu o azukemasu</td><td>托運行李</td></tr>
+                <tr><td>13</td><td>遅延しています</td><td>chien shite imasu</td><td>航班延誤</td></tr>
+                <tr><td>14</td><td>案内所 (あんないじょ)</td><td>annaijo</td><td>詢問處 / 服務台</td></tr>
+                <tr><td>15</td><td>トイレはどこですか</td><td>toire wa doko desu ka</td><td>洗手間在哪裡？</td></tr>
+                <tr><td>16</td><td>税関 (ぜいかん)</td><td>zeikan</td><td>海關申報</td></tr>
+                <tr><td>17</td><td>保安検査</td><td>hoan kensa</td><td>安全檢查 / 安檢</td></tr>
+                <tr><td>18</td><td>出発 (しゅっぱつ)</td><td>shuppatsu</td><td>出發</td></tr>
+                <tr><td>19</td><td>到着 (とうちゃく)</td><td>tōchaku</td><td>抵達</td></tr>
+                <tr><td>20</td><td>乗り換え</td><td>norikae</td><td>轉機</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 第四章教材：買東西用語 20則 -->
+    <div id="ch4" class="card">
+        <h2>🛍️ 第4章：購物與買東西情境用語 (學習區 - 20則)</h2>
+        <p>在日本血拼時最實用的 20 個購物句型：</p>
+        <table>
+            <thead><tr><th>編號</th><th>日文 / 漢字</th><th>羅馬拼音</th><th>中文意思</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>これをください</td><td>kore o kudasai</td><td>請給我這個</td></tr>
+                <tr><td>2</td><td>いくらですか</td><td>ikura desu ka</td><td>這個多少錢？</td></tr>
+                <tr><td>3</td><td>袋は結構です</td><td>fukuro wa kekkō desu</td><td>不用塑膠袋</td></tr>
+                <tr><td>4</td><td>カードは使えますか</td><td>kādo wa tsukaemasu ka</td><td>可以刷卡嗎？</td></tr>
+                <tr><td>5</td><td>免税できますか</td><td>menzei dekimasu ka</td><td>可以退稅嗎？</td></tr>
+                <tr><td>6</td><td>試着してもいいですか</td><td>shichaku shite mo ii desu ka</td><td>可以試穿嗎？</td></tr>
+                <tr><td>7</td><td>サイズはありますか</td><td>saizu wa arimasu ka</td><td>有這個尺寸嗎？</td></tr>
+                <tr><td>8</td><td>別々にしてください</td><td>betsubetsu ni shite kudasai</td><td>請幫我們分開結帳</td></tr>
+                <tr><td>9</td><td>レシートをください</td><td>reshīto o kudasai</td><td>請給我收據</td></tr>
+                <tr><td>10</td><td>割引 (わりびき)</td><td>waribiki</td><td>折扣 / 打折</td></tr>
+                <tr><td>11</td><td>おすすめは何ですか</td><td>osusume wa nan desu ka</td><td>有什麼推薦的嗎？</td></tr>
+                <tr><td>12</td><td>他の色はありますか</td><td>hoka no iro wa arimasu ka</td><td>有其他顏色嗎？</td></tr>
+                <tr><td>13</td><td>ちょっと見ているだけです</td><td>chotto mite iru dake desu</td><td>我只是隨便看看</td></tr>
+                <tr><td>14</td><td>売り切れ (うりきれ)</td><td>urikire</td><td>售罄 / 賣完</td></tr>
+                <tr><td>15</td><td>ありがとうございました</td><td>arigatō gozaimashita</td><td>謝謝惠顧</td></tr>
+                <tr><td>16</td><td>現金 (げんきん)</td><td>genkin</td><td>現金</td></tr>
+                <tr><td>17</td><td>お釣り (おつり)</td><td>otsuri</td><td>找零</td></tr>
+                <tr><td>18</td><td>試供品 (しきょうひん)</td><td>shikyōhin</td><td>試用品 / 贈品</td></tr>
+                <tr><td>19</td><td>新品 (しんぴん)</td><td>shinpin</td><td>全新商品</td></tr>
+                <tr><td>20</td><td>返品できますか</td><td>henpin dekimasu ka</td><td>可以退貨嗎？</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 第五章教材：日常閒聊用語 20則 -->
+    <div id="ch5" class="card">
+        <h2>💬 第5章：日常閒聊與社交情境用語 (學習區 - 20則)</h2>
+        <p>拉近距離、社交與日常對話的 20 個實用短句：</p>
+        <table>
+            <thead><tr><th>編號</th><th>日文 / 漢字</th><th>羅馬拼音</th><th>中文意思</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>はじめまして</td><td>hajimemashite</td><td>初次見面請多指教</td></tr>
+                <tr><td>2</td><td>よろしくお願いします</td><td>yoroshiku onegai shimasu</td><td>請多關照</td></tr>
+                <tr><td>3</td><td>すごいですね！</td><td>sugoi desu ne!</td><td>太厲害了吧！</td></tr>
+                <tr><td>4</td><td>お疲れ様でした</td><td>otsukaresama deshita</td><td>辛苦了</td></tr>
+                <tr><td>5</td><td>すみません</td><td>sumimasen</td><td>不好意思 / 抱歉</td></tr>
+                <tr><td>6</td><td>大丈夫です</td><td>daijōbu desu</td><td>沒關係 / 沒事</td></tr>
+                <tr><td>7</td><td>楽しかったです</td><td>tanoshikatta desu</td><td>非常開心</td></tr>
+                <tr><td>8</td><td>お久しぶりです</td><td>ohisashiburi desu</td><td>好久不見</td></tr>
+                <tr><td>9</td><td>元気ですか</td><td>genki desu ka</td><td>你身體好嗎 / 最近還好嗎？</td></tr>
+                <tr><td>10</td><td>はい、元気です</td><td>hai, genki desu</td><td>我很好</td></tr>
+                <tr><td>11</td><td>何が好きですか</td><td>nani ga suki desu ka</td><td>你喜歡什麼？</td></tr>
+                <tr><td>12</td><td>趣味は何ですか</td><td>shumi wa nan desu ka</td><td>你的興趣是什麼？</td></tr>
+                <tr><td>13</td><td>また会いましょう</td><td>mata aimashō</td><td>下次再見</td></tr>
+                <tr><td>14</td><td>気をつけてね</td><td>ki o tsukete ne</td><td>路上小心 / 保重</td></tr>
+                <tr><td>15</td><td>よかったですね</td><td>yokatta desu ne</td><td>太好了呢！</td></tr>
+                <tr><td>16</td><td>おめでとうございます</td><td>omedetō gozaimasu</td><td>恭喜你</td></tr>
+                <tr><td>17</td><td>どういたしまして</td><td>dō itashimashite</td><td>不客氣</td></tr>
+                <tr><td>18</td><td>しんぱいしないで</td><td>shinpai shinaide</td><td>別擔心</td></tr>
+                <tr><td>19</td><td>がんばってね</td><td>ganbatte ne</td><td>加油！</td></tr>
+                <tr><td>20</td><td>またね</td><td>mata ne</td><td>回頭見 / 掰掰</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 🎯 真正無限出題的測驗專區 -->
+    <div id="quiz-section" class="card">
+        <h2>🎯 ♾️ 智慧無限隨堂測驗專區</h2>
+        <p>學完上面的單字後，來這裡進行無限隨機挑戰！答完一題點擊「下一題」會源源不絕一直出題！</p>
+        
+        <label for="quizScope"><strong>選擇測驗單元：</strong></label><br>
+        <select id="quizScope" onchange="nextQuestion()">
+            <option value="ch1">第1章：五十音與片假名讀音挑戰</option>
+            <option value="ch2">第2章：學校用語 (20則大題庫)</option>
+            <option value="ch3">第3章：機場用語 (20則大題庫)</option>
+            <option value="ch4">第4章：買東西用語 (20則大題庫)</option>
+            <option value="ch5">第5章：日常閒聊用語 (20則大題庫)</option>
+        </select>
+
+        <div class="score-board" id="scoreBoard">已連續答對：0 題</div>
+
+        <div class="quiz-box" id="quizContainer">
+            <!-- 動態載入題目 -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // 各章節完整大題庫（完美對應學習區的 20 則內容）
+    const fullDatabases = {
+        ch1: [
+            { q: "請問平假名/片假名「あ / ア」的正確讀音是？", options: ["a", "i", "u", "e"], answer: "a", tip: "💡 記憶法：ア 像是一個「阿媽」側臉的形狀！" },
+            { q: "請問平假名/片假名「い / イ」的正確讀音是？", options: ["a", "i", "u", "o"], answer: "i", tip: "💡 記憶法：イ 像是人的側臉「人」形或椅子(Isu)。" },
+            { q: "請問平假名/片假名「う / ウ」的正確讀音是？", options: ["e", "o", "u", "a"], answer: "u", tip: "💡 記憶法：ウ 像戴著帽子的屋簷「屋」。" },
+            { q: "請問平假名/片假名「え / エ」的正確讀音是？", options: ["e", "i", "u", "ka"], answer: "e", tip: "💡 記憶法：エ 像是一個工廠的「工」字。" },
+            { q: "請問平假名/片假名「お / オ」的正確讀音是？", options: ["o", "a", "u", "sa"], answer: "o", tip: "💡 記憶法：オ 像一個人雙手交叉大喊「哦！」的姿勢。" },
+            { q: "請問平假名/片假名「か / カ」的正確讀音是？", options: ["ka", "ki", "ku", "ke"], answer: "ka", tip: "💡 記憶法：カ 發音像台語的「咖」。" },
+            { q: "請問平假名/片假名「き / キ」的正確讀音是？", options: ["ka", "ki", "ku", "ko"], answer: "ki", tip: "💡 記憶法：キ 像是一支鑰匙。" },
+            { q: "請問平假名/片假名「さ / サ」的正確讀音是？", options: ["ta", "na", "sa", "ha"], answer: "sa", tip: "💡 記憶法：サ 造型像是一把「雨傘」。" },
+            { q: "請問平假名/片假名「た / タ」的正確讀音是？", options: ["ta", "chi", "tsu", "te"], answer: "ta", tip: "💡 記憶法：タ 像夕陽西下。" },
+            { q: "請問平假名/片假名「な / ナ」的正確讀音是？", options: ["na", "ni", "nu", "ne"], answer: "na", tip: "💡 記憶法：ナ 像一個十字。" },
+            { q: "請問平假名/片假名「は / ハ」的正確讀音是？", options: ["ba", "ha", "pa", "ma"], answer: "ha", tip: "💡 記憶法：ハ 像數字「八」。" },
+            { q: "請問平假名/片假名「ま / マ」的正確讀音是？", options: ["ma", "mi", "mu", "me"], answer: "ma", tip: "💡 記憶法：マ 像一匹「馬」。" }
+        ],
+        ch2: [
+            { q: "日語的「先生 (せんせい)」中文意思是？", options: ["學生", "老師 / 教授", "朋友", "校長"], answer: "老師 / 教授", tip: "💡 記憶法：傳授學問的前輩就是先生！" },
+            { q: "日語的「宿題 (しゅくだい)」中文意思是？", options: ["考試", "作業 / 功課", "筆記本", "課本"], answer: "作業 / 功課", tip: "💡 記憶法：在家裡做的題目就是宿題。" },
+            { q: "日語的「友達 (ともだち)」中文意思是？", options: ["老師", "同學", "朋友", "家人"], answer: "朋友", tip: "💡 記憶法：互相陪伴的人就是友達。" },
+            { q: "日語的「試験 (しけん)」中文意思是？", options: ["考試", "上課", "下課", "放假"], answer: "考試", tip: "💡 記憶法：試驗也就是學校的考試。" },
+            { q: "日語的「教科書 (きょうかしょ)」意思是？", options: ["筆記本", "課本", "字典", "考卷"], answer: "課本", tip: "💡 記憶法：教學用的書。" },
+            { q: "日語的「ノート」意思是？", options: ["原子筆", "筆記本", "橡皮擦", "書包"], answer: "筆記本", tip: "💡 記憶法：英文 Note 的外來語。" },
+            { q: "日語的「教室 (きょうしつ)」意思是？", options: ["操場", "圖書館", "教室", "辦公室"], answer: "教室", tip: "💡 記憶法：上課的房間。" },
+            { q: "日語的「黒板 (こくばん)」意思是？", options: ["白板", "黑板", "佈告欄", "投影機"], answer: "黑板", tip: "💡 記憶法：黑色的板子。" },
+            { q: "日語的「わかりました」意思是？", options: ["我知道了/明白了", "我不懂", "請重複", "謝謝"], answer: "我知道了/明白了", tip: "💡 記憶法：表示理解對方的說明。" },
+            { q: "日語的「質問があります」意思是？", options: ["我有答案", "我有問題", "我累了", "下課了"], answer: "我有問題", tip: "💡 記憶法：shitsumon 是問題。" },
+            { q: "日語的「お願いします」意思是？", options: ["拜託了 / 請多指教", "再見", "對不起", "沒關係"], answer: "拜託了 / 請多指教", tip: "💡 記憶法：請求別人時常用。" },
+            { q: "日語的「遅刻します」意思是？", options: ["我要遲到了", "我早到", "我請假", "我準時"], answer: "我要遲到了", tip: "💡 記憶法：chikoku 代表遲到。" },
+            { q: "日語的「ペンを貸してください」意思是？", options: ["請買筆給我", "請借我筆", "這筆多少錢？", "我有筆"], answer: "請借我筆", tip: "💡 記憶法：kashite 是借出的意思。" },
+            { q: "日語的「もう一度お願いします」意思是？", options: ["請再說一次/再一次", "不用了", "夠了", "很棒"], answer: "請再說一次/再一次", tip: "💡 記憶法：mō ichido 代表再一次。" },
+            { q: "日語的「休み時間」意思是？", options: ["上課時間", "考試時間", "下課/休息時間", "放學時間"], answer: "下課/休息時間", tip: "💡 記憶法：yasumi 是休息。" },
+            { q: "日語的「時間割 (じかんわり)」意思是？", options: ["鬧鐘", "課表", "行事曆", "鐘聲"], answer: "課表", tip: "💡 記憶法：分配時間的表。" },
+            { q: "日語的「鉛筆 (えんぴつ)」意思是？", options: ["原子筆", "鉛筆", "紅筆", "自動筆"], answer: "鉛筆", tip: "💡 記憶法：enpitsu 是鉛筆。" },
+            { q: "日語的「消しゴム」意思是？", options: ["膠水", "剪刀", "橡皮擦", "立可帶"], answer: "橡皮擦", tip: "💡 記憶法：kesu 是擦除的意思。" },
+            { q: "日語的「図書館 (としょかん)」意思是？", options: ["書店", "圖書館", "合作社", "福利社"], answer: "圖書館", tip: "💡 記憶法：看書的館舍。" },
+            { q: "日語的「卒業 (そつぎょう)」意思是？", options: ["入學", "轉學", "畢業", "休學"], answer: "畢業", tip: "💡 記憶法：sotsugyō 代表畢業。" }
+        ],
+        ch3: [
+            { q: "在機場「パスポート」是指什麼？", options: ["機票", "護照", "登機門", "行李"], answer: "護照", tip: "💡 記憶法：英文 Passport 的日文外來語直譯。" },
+            { q: "在機場「搭乗口 (とうじょうぐち)」是指？", options: ["免稅店", "登機門 / 登機口", "海關", "出口"], answer: "登機門 / 登機口", tip: "💡 記憶法：搭乘的口。" },
+            { q: "在機場「免税店 (ぜんぜいてん)」是指？", options: ["便利商店", "免稅店", "餐廳", "紀念品店"], answer: "免稅店", tip: "💡 記憶法：免除稅金的店。" },
+            { q: "在機場「手荷物受取所」是指？", options: ["行李提領處", "售票口", "詢問處", "免稅店"], answer: "行李提領處", tip: "💡 記憶法：受取代表領取行李。" },
+            { q: "在機場「飛行機 (ひこうき)」意思是？", options: ["火車", "飛機", "捷運", "公車"], answer: "飛機", tip: "💡 記憶法：在天空飛的機器。" },
+            { q: "在機場「チケット」意思是？", options: ["護照", "機票 / 車票", "身分證", "錢包"], answer: "機票 / 車票", tip: "💡 記憶法：英文 Ticket。" },
+            { q: "在機場「座席 (ざせき)」意思是？", options: ["座位", "走道", "窗戶", "行李架"], answer: "座位", tip: "💡 記憶法：坐的位置。" },
+            { q: "在機場「窓側 (まどがわ)」意思是？", options: ["靠走道", "靠窗", "中間位", "最後方"], answer: "靠窗", tip: "💡 記憶法：mado 是窗戶。" },
+            { q: "在機場「通路側 (つうろがわ)」意思是？", options: ["靠窗", "靠走道", "機長室", "廁所旁"], answer: "靠走道", tip: "💡 記憶法：tsūro 是通道。" },
+            { q: "機場的「出口 (でぐち)」意思是？", options: ["入口", "出口", "轉機", "安檢"], answer: "出口", tip: "💡 記憶法：de(出) + guchi(口)。" },
+            { q: "機場的「入国審査」意思是？", options: ["入境審查 / 海關", "買機票", "托運行李", "登機"], answer: "入境審查 / 海關", tip: "💡 記憶法：進入國家的審查。" },
+            { q: "日語「荷物を預けます」意思是？", options: ["領行李", "托運行李", "丟行李", "檢查行李"], answer: "托運行李", tip: "💡 記憶法：把行李寄放(托運)。" },
+            { q: "日語「遅延しています」意思是？", options: ["準點", "航班延誤", "取消航班", "提早起飛"], answer: "航班延誤", tip: "💡 記憶法：chien 代表延遲。" },
+            { q: "機場的「案内所 (あんないじょ)」意思是？", options: ["詢問處 / 服務台", "廁所", "海關", "候機室"], answer: "詢問處 / 服務台", tip: "💡 記憶法：引導、案内的地方。" },
+            { q: "日語「トイレはどこですか」意思是？", options: ["登機門在哪裡？", "洗手間在哪裡？", "出口在哪裡？", "行李在哪裡？"], answer: "洗手間在哪裡？", tip: "💡 記憶法：toire 就是 Toile(洗手間)。" },
+            { q: "機場的「税関 (ぜいかん)」意思是？", options: ["海關申報", "免稅店", "安檢", "登機門"], answer: "海關申報", tip: "💡 記憶法：課稅關口。" },
+            { q: "機場的「保安検査」意思是？", options: ["護照檢查", "安全檢查 / 安檢", "行李秤重", "買機票"], answer: "安全檢查 / 安檢", tip: "💡 記憶法：保安、安全的檢查。" },
+            { q: "日語的「出発 (しゅっぱつ)」意思是？", options: ["抵達", "出發", "轉機", "延誤"], answer: "出發", tip: "💡 記憶法：出發。" },
+            { q: "日語的「到着 (とうちゃく)」意思是？", options: ["出發", "抵達", "起飛", "降落"], answer: "抵達", tip: "💡 記憶法：到達。" },
+            { q: "日語的「乗り換え」意思是？", options: ["轉機 / 換車", "直飛", "退票", "改期"], answer: "轉機 / 換車", tip: "💡 記憶法：換乘交通工具。" }
+        ],
+        ch4: [
+            { q: "購物時說「これをください」意思是？", options: ["這個多少錢？", "請給我這個", "不用塑膠袋", "可以刷卡嗎？"], answer: "請給我這個", tip: "💡 記憶法：kore(這個) + kudasai(請給我)。" },
+            { q: "購物時詢問「いくらですか」意思是？", options: ["有尺寸嗎？", "這個多少錢？", "可以退稅嗎？", "在哪裡結帳？"], answer: "這個多少錢？", tip: "💡 記憶法：詢問價格必備。" },
+            { q: "結帳時說「袋は結構です」意思是？", options: ["請給我袋子", "不用塑膠袋謝謝", "袋子破了", "有大袋子嗎？"], answer: "不用塑膠袋謝謝", tip: "💡 記憶法：kekkō 表示不用了。" },
+            { q: "購物時問「カードは使えますか」意思是？", options: ["可以付現嗎？", "可以刷卡嗎？", "有找零嗎？", "有發票嗎？"], answer: "可以刷卡嗎？", tip: "💡 記憶法：kādo 是卡片(Card)。" },
+            { q: "購物時問「免税できますか」意思是？", options: ["可以退稅嗎？", "可以試穿嗎？", "有打折嗎？", "可以換貨嗎？"], answer: "可以退稅嗎？", tip: "💡 記憶法：menzei 是免稅。" },
+            { q: "購物時問「試着してもいいですか」意思是？", options: ["可以摸嗎？", "可以試穿嗎？", "可以拍照嗎？", "可以吃嗎？"], answer: "可以試穿嗎？", tip: "💡 記憶法：shichaku 是試穿。" },
+            { q: "購物時問「サイズはありますか」意思是？", options: ["有這個尺寸嗎？", "有其他顏色嗎？", "這是新品嗎？", "現貨在哪裡？"], answer: "有這個尺寸嗎？", tip: "💡 記憶法：saizu 是尺寸(Size)。" },
+            { q: "結帳時說「別々にしてください」意思是？", options: ["一起結帳", "分開結帳", "不用找零", "裝成兩袋"], answer: "分開結帳", tip: "💡 記憶法：betsubetsu 代表分別、分開。" },
+            { q: "結帳後要求「レシートをください」意思是？", options: ["請給我收據", "請給我袋子", "請包裝", "謝謝"], answer: "請給我收據", tip: "💡 記憶法：reshīto 是收據(Receipt)。" },
+            { q: "日語的「割引 (わりびき)」意思是？", options: ["加價", "折扣 / 打折", "售完", "免運"], answer: "折扣 / 打折", tip: "💡 記憶法：waribiki 代表折扣。" },
+            { q: "購物時問「おすすめは何ですか」意思是？", options: ["最貴的是什麼？", "有什麼推薦的嗎？", "這是哪裡產的？", "期限到何時？"], answer: "有什麼推薦的嗎？", tip: "💡 記憶法：osusume 是推薦。" },
+            { q: "購物時問「他の色はありますか」意思是？", options: ["有其他顏色嗎？", "有其他尺寸嗎？", "有其他款式嗎？", "有新品嗎？"], answer: "有其他顏色嗎？", tip: "💡 記憶法：iro 是顏色。" },
+            { q: "逛街時對店員說「ちょっと見ているだけです」意思是？", options: ["我要買這個", "我只是隨便看看", "店裡好熱", "我想找店員"], answer: "我只是隨便看看", tip: "💡 記憶法：mite iru dake 代表只是在看。" },
+            { q: "看到商品標示「売り切れ」意思是？", options: ["熱賣中", "售罄 / 賣完了", "特價中", "新品上市"], answer: "售罄 / 賣完了", tip: "💡 記憶法：uri kire 代表賣光了。" },
+            { q: "離開時說「ありがとうございました」意思是？", options: ["再見", "謝謝惠顧 / 謝謝", "對不起", "早安"], answer: "謝謝惠顧 / 謝謝", tip: "💡 記憶法：表達感謝。" },
+            { q: "日語的「現金 (げんきん)」意思是？", options: ["刷卡", "現金", "禮券", "行動支付"], answer: "現金", tip: "💡 記憶法：genkin 是現金。" },
+            { q: "日語的「お釣り (おつり)」意思是？", options: ["找零", "稅金", "總金額", "折扣"], answer: "找零", tip: "💡 記憶法：找回的零錢。" },
+            { q: "日語的「試供品 (しきょうひん)」意思是？", options: ["瑕疵品", "試用品 / 贈品", "二手貨", "展示品"], answer: "試用品 / 贈品", tip: "💡 記憶法：免費試用的樣品。" },
+            { q: "日語的「新品 (しんぴん)」意思是？", options: ["二手貨", "全新商品", "特價品", "過季品"], answer: "全新商品", tip: "💡 記憶法：全新的物品。" },
+            { q: "購物時問「返品できますか」意思是？", options: ["可以退貨嗎？", "可以修理嗎？", "可以寄放嗎？", "可以換顏色嗎？"], answer: "可以退貨嗎？", tip: "💡 記憶法：henpin 是退貨。" }
+        ],
+        ch5: [
+            { q: "初次見面打招呼最常說的「はじめまして」意思是？", options: ["你好嗎？", "初次見面請多指教", "好久不見", "謝謝"], answer: "初次見面請多指教", tip: "💡 記憶法：新相遇的開始。" },
+            { q: "日語「よろしくお願いします」意思是？", options: ["請多關照", "再見", "對不起", "沒關係"], answer: "請多關照", tip: "💡 記憶法：社交常用結尾語。" },
+            { q: "稱讚別人「すごいですね！」意思是？", options: ["太厲害了吧！", "真無聊！", "真的嗎？", "好可惜！"], answer: "太厲害了吧！", tip: "💡 記憶法：sugoi 代表厲害、驚人。" },
+            { q: "活動結束後說「お疲れ様でした」意思是？", options: ["早安", "辛苦了", "再見", "對不起"], answer: "辛苦了", tip: "💡 記憶法：慰勞大家辛苦了。" },
+            { q: "日語「すみません」可以表示？", options: ["不好意思 / 謝謝", "再見", "太棒了", "不知道"], answer: "不好意思 / 謝謝", tip: "💡 記憶法：日本最好用的萬用詞（道歉或道謝）。" },
+            { q: "日語「大丈夫です」意思是？", options: ["沒關係 / 沒事", "不行", "很危險", "太貴了"], answer: "沒關係 / 沒事", tip: "💡 記憶法：一切安好沒問題。" },
+            { q: "日語「楽しかったです」意思是？", options: ["很累", "非常開心", "很無聊", "很難吃"], answer: "非常開心", tip: "💡 記憶法：tanoshi 代表快樂。" },
+            { q: "久違見面說「お久しぶりです」意思是？", options: ["好久不見", "早安", "晚安", "再見"], answer: "好久不見", tip: "💡 記憶法：ohisashiburi 是好久不見。" },
+            { q: "問候對方「元気ですか」意思是？", options: ["你今天吃飽了嗎？", "你身體好嗎 / 最近還好嗎？", "你在哪裡？", "忙什麼？"], answer: "你身體好嗎 / 最近還好嗎？", tip: "💡 記憶法：genki 代表有精神、健康。" },
+            { q: "回答「はい、元気です」意思是？", options: ["我很累", "我很好", "我生病了", "我不知道"], answer: "我很好", tip: "💡 記憶法：回答自己很有精神。" },
+            { q: "問別人「何が好きですか」意思是？", options: ["你喜歡什麼？", "你叫什麼名字？", "你幾歲？", "你住哪裡？"], answer: "你喜歡什麼？", tip: "💡 記憶法：nani(什麼) + suki(喜歡)。" },
+            { q: "問別人「趣味は何ですか」意思是？", options: ["你的夢想是什麼？", "你的興趣是什麼？", "你的職業是什麼？", "你喜歡吃什麼？"], answer: "你的興趣是什麼？", tip: "💡 記憶法：shumi 是興趣。" },
+            { q: "道別時說「また会いましょう」意思是？", options: ["下次再見", "永別了", "明天見", "走吧"], answer: "下次再見", tip: "💡 記憶法：mata(又/再) + aimashō(見面)。" },
+            { q: "道別時說「気をつけてね」意思是？", options: ["快一點", "路上小心 / 保重", "不要回頭", "安靜"], answer: "路上小心 / 保重", tip: "💡 記憶法：注意安全的意思。" },
+            { q: "聽到好消息說「よかったですね」意思是？", options: ["太好了呢！", "真倒楣！", "跟我無關", "怎麼會這樣？"], answer: "太好了呢！", tip: "💡 記憶法：yokatta 代表太好了。" },
+            { q: "日語「おめでとうございます」意思是？", options: ["恭喜你", "生日快樂", "新年快樂", "辛苦了"], answer: "恭喜你", tip: "💡 記憶法：表達祝賀。" },
+            { q: "日語「どういたしまして」意思是？", options: ["謝謝", "不客氣", "對不起", "沒關係"], answer: "不客氣", tip: "💡 記憶法：回應別人的道謝。" },
+            { q: "安慰別人「しんぱいしないで」意思是？", options: ["別擔心", "別哭了", "別生氣", "別吵了"], answer: "別擔心", tip: "💡 記憶法：shinpai 是擔心。" },
+            { q: "為別人打氣說「がんばってね」意思是？", options: ["加油！", "快一點！", "小心！", "安靜！"], answer: "加油！", tip: "💡 記憶法：ganbatte 代表努力加油。" },
+            { q: "輕鬆道別說「またね」意思是？", options: ["掰掰 / 回頭見", "明天見", "永別", "晚安"], answer: "掰掰 / 回頭見", tip: "💡 記憶法：朋友間常用的輕鬆道別。" }
+        ]
+    };
+
+    let score = 0;
+
+    function switchTab(tabId, event) {
+        document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        if (tabId === 'quiz-section') { 
+            nextQuestion(); 
+        }
+    }
+
+    function nextQuestion() {
+        const scope = document.getElementById('quizScope').value;
+        const container = document.getElementById('quizContainer');
+        const scoreBoard = document.getElementById('scoreBoard');
+        
+        scoreBoard.textContent = `已連續答對：${score} 題`;
+
+        const db = fullDatabases[scope];
+        const randomQ = db[Math.floor(Math.random() * db.length)];
+        const shuffledOptions = [...randomQ.options].sort(() => Math.random() - 0.5);
+
+        let optionsHtml = '';
+        shuffledOptions.forEach((opt) => {
+            optionsHtml += `<label><input type="radio" name="subQuiz" value="${opt}"> ${opt}</label><br>`;
+        });
+
+        container.innerHTML = `
+            <p><strong>【無限挑戰題】</strong> ${randomQ.q}</p>
+            ${optionsHtml}
+            <button class="btn" onclick="checkAnswer('${randomQ.answer.replace(/'/g, "\\'")}', '${randomQ.tip.replace(/'/g, "\\'")}')">提交答案</button>
+            <div id="quizFeedback" class="feedback"></div>
+            <div id="quizTip" class="tip-box"></div>
+            <br>
+            <button class="btn" id="nextBtn" style="display:none; background-color: #f4a261;" onclick="nextQuestion()">➡️ 下一題 (繼續挑戰)</button>
+        `;
+    }
+
+    function checkAnswer(correctAnswer, tipText) {
+        const radios = document.getElementsByName('subQuiz');
+        const feedback = document.getElementById('quizFeedback');
+        const tipBox = document.getElementById('quizTip');
+        const nextBtn = document.getElementById('nextBtn');
+        let selected = '';
+        
+        for (let r of radios) { 
+            if (r.checked) { selected = r.value; break; } 
+        }
+        
+        if (selected === '') {
+            feedback.style.color = '#d90429';
+            feedback.textContent = '⚠️ 請先選擇一個選項再提交喔！';
+            return;
+        }
+
+        tipBox.style.display = 'block';
+        tipBox.innerHTML = `<strong>💡 記憶小提醒：</strong> ${tipText}`;
+
+        if (selected === correctAnswer) {
+            score++;
+            feedback.style.color = '#2d6a4f';
+            feedback.textContent = '🎉 答對了！太棒囉！';
+        } else {
+            score = 0; 
+            feedback.style.color = '#d90429';
+            feedback.textContent = `❌ 答錯囉！正確答案是：【 ${correctAnswer} 】`;
+        }
+
+        document.getElementById('scoreBoard').textContent = `已連續答對：${score} 題`;
+
+        for (let r of radios) { r.disabled = true; }
+        nextBtn.style.display = 'inline-block';
+    }
+</script>
+
+</body>
+</html>
